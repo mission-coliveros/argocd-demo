@@ -23,7 +23,7 @@
 
 module "argo_cd" {
   count  = var.deploy_argo_cd ? 1 : 0
-  source = "./modules/argo_cd"
+  source = "modules/argo_cd"
 
   env_name              = var.env_name
   argocd_version        = var.argocd_version
