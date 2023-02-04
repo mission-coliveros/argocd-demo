@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.version: 1.26.1 (HEAD)
+  labels:
+    io.kompose.service: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o k8s
+        kompose.version: 1.26.1 (HEAD)
+      labels:
+        io.kompose.service: db
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_DB
+                  name: api
+            - name: POSTGRES_HOST_AUTH_METHOD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_HOST_AUTH_METHOD
+                  name: api
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: api
+            - name: POSTGRES_USER
+              value: {{ .Values.db.deployment.env.username }}
+          image: "{{ .Values.db.deployment.env.image.name }}:{{ .Values.db.deployment.env.image.tag }}"
+          name: db
+          ports:
+            - containerPort: {{ .Values.db.deployment.containerPort }}
+          resources: {}
+      restartPolicy: Always

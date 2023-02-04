@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.image-pull-policy: Never
+    kompose.version: 1.26.1 (HEAD)
+  labels:
+    # io.kompose.service: api
+    app: api
+spec:
+  replicas: {{ .Values.api.deployment.replicas }}
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy: { }
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o k8s
+        kompose.image-pull-policy: Never
+        kompose.version: 1.26.1 (HEAD)
+      labels:
+        io.kompose.service: api
+        app: api
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - image: "{{ .Values.api.deployment.image.name }}:{{ .Values.api.deployment.image.tag }}"
+          imagePullPolicy: Always
+          name: api
+          ports:
+            - containerPort: {{ .Values.api.deployment.containerPort }}
+          resources: { }
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.api.deployment.containerPort }}
+              # scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 1
+          env:
+            # Plaintext variables from Helm values
+            - name: PORT
+              value: "{{ .Values.api.deployment.containerPort }}"
+            - name: DATABASE_URL
+              value: {{ .Values.db.deployment.env.type }}://{{ .Values.db.deployment.env.username }}@{{ .Values.db.deployment.env.hostname }}:{{ .Values.db.deployment.containerPort }}/{{.Values.db.deployment.env.databaseName }}
+            - name: NODE_ENV
+              value: "{{ .Values.api.deployment.env.node_env }}"
+            - name: AUTH0_DOMAIN
+              value: {{ .Values.api.deployment.env.auth0.domain }}
+            - name: AUTH0_INTERWELL_API_AUDIENCE
+              value: "{{ .Values.api.deployment.env.auth0.interwell_api_audience }}"
+            - name: AUTH0_MANAGEMENT_API_AUDIENCE
+              value: "{{ .Values.api.deployment.env.auth0.management_api_audience }}"
+
+            # Secret references
+            - name: AUTH0_INTERWELL_APP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: AUTH0_INTERWELL_APP_CLIENT_ID
+            - name: AUTH0_INTERWELL_APP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: AUTH0_INTERWELL_APP_CLIENT_SECRET
+            - name: AUTH0_MANAGEMENT_APP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: AUTH0_MANAGEMENT_APP_CLIENT_ID
+            - name: AUTH0_MANAGEMENT_APP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: AUTH0_MANAGEMENT_APP_CLIENT_SECRET
+            - name: SENDBIRD_APPLICATION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SENDBIRD_APPLICATION_ID
+            - name: SENDBIRD_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: SENDBIRD_API_TOKEN
+            - name: BRAZE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: BRAZE_API_KEY
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: POSTGRES_DB
+            - name: POSTGRES_HOST_AUTH_METHOD
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: POSTGRES_HOST_AUTH_METHOD
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: api
+                  key: POSTGRES_USER
+      restartPolicy: Always

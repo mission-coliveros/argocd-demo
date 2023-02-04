@@ -1,0 +1,45 @@
+# API
+api:
+  containerPort: 3000
+  deployment:
+    deploy: true
+    replicas: 1
+    containerPort: 6379
+    env:
+      auth0:
+        domain: mission-staging.us.auth0.com
+        interwell_api_audience: https://mission-staging.us.auth0.com/api/v2/
+        management_api_audience: https://mission-staging.us.auth0.com/api/v2/
+      node_env: production
+    image:
+      name: 070940067735.dkr.ecr.us-east-1.amazonaws.com/mission-api
+      tag: PR-53
+  ingress:
+    deploy: false
+
+# Database
+db:
+  deployment:
+    deploy: true
+    replicas: 1
+    containerPort: 5432
+    env:
+      databaseName: postgres
+      hostname: db
+      image:
+        name: postgres
+        tag: '14.5'
+      type: postgresql
+      username: admin
+
+# Redis
+redis:
+  deployment:
+    containerPort: 6379
+    deploy: false
+    replicas: 0
+  image:
+    name: redis
+    tag: 7.0.5
+  service:
+    deploy: false

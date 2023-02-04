@@ -1,0 +1,32 @@
+{{ if .Values.redis.deployment.deploy }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.version: 1.26.1 (HEAD)
+  labels:
+    io.kompose.service: redis
+spec:
+  replicas: {{ .Values.redis.deployment.replicas }}
+  selector:
+    matchLabels:
+      io.kompose.service: redis
+  strategy: { }
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o k8s
+        kompose.version: 1.26.1 (HEAD)
+      labels:
+        io.kompose.service: redis
+    spec:
+      containers:
+        - image: "{{ .Values.redis.image.name }}:{{ .Values.redis.image.tag }}"
+          name: redis
+          ports:
+            - containerPort: {{ .Values.redis.deployment.containerPort }}
+          resources: { }
+      restartPolicy: Always
+{{end}}

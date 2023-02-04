@@ -1,0 +1,25 @@
+{{ if .Values.api.ingress.deploy }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: mission-api-ingress
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /api/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
+{{ end }}

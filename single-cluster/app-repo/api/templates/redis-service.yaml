@@ -1,0 +1,18 @@
+{{ if .Values.redis.service.deploy }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.version: 1.26.1 (HEAD)
+  labels:
+    io.kompose.service: redis
+spec:
+  ports:
+    - name: "{{ .Values.redis.deployment.containerPort }}"
+      port: {{ .Values.redis.deployment.containerPort }}
+      targetPort: {{ .Values.redis.deployment.containerPort }}
+  selector:
+    io.kompose.service: redis
+{{ end }}
