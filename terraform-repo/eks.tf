@@ -5,7 +5,7 @@ module "eks" {
   # Base
   cluster_name    = local.cluster_name
   cluster_version = "1.24"
-  cluster_addons = {
+  cluster_addons  = {
     coredns = {
       most_recent = true
     }
@@ -20,12 +20,12 @@ module "eks" {
   # Encryption
   cluster_encryption_config = [
     {
-      resources = ["secrets"]
+      resources = [ "secrets" ]
     }
   ]
   create_kms_key                = true
   kms_key_enable_default_policy = true
-  kms_key_administrators = [
+  kms_key_administrators        = [
     data.aws_iam_role.mission_admin.arn
   ]
 
@@ -48,15 +48,23 @@ module "eks" {
   # Extend node-to-node security group rules
   node_security_group_additional_rules = {
     ingress_self_all = {
-      description = "Allow all traffic between nodes"
+      description = "Node to node all ports/protocols"
       protocol    = "-1"
       from_port   = 0
       to_port     = 0
       type        = "ingress"
       self        = true
     }
+    ingress_cluster_all = {
+      description                   = "Cluster to node all ports/protocols"
+      protocol                      = "-1"
+      from_port                     = 0
+      to_port                       = 0
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
     egress_all = {
-      description      = "Allow all outbound traffic from nodes"
+      description      = "Node all egress"
       protocol         = "-1"
       from_port        = 0
       to_port          = 0
@@ -67,15 +75,15 @@ module "eks" {
   }
 
   # Logging
-  cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  cluster_enabled_log_types = [ "api", "audit", "authenticator", "controllerManager", "scheduler" ]
 
   # Auth
   manage_aws_auth_configmap = true
-  aws_auth_roles = [
+  aws_auth_roles            = [
     {
       rolearn  = data.aws_iam_role.mission_admin.arn
       username = "mission-admin"
-      groups   = ["system:masters"]
+      groups   = [ "system:masters" ]
     }
   ]
 
@@ -93,7 +101,7 @@ module "eks" {
       "launch-template" = "false"
       "disk-size"       = "300"
       "capacity-type"   = "ON_DEMAND"
-      "instance-types"  = ["t3.small"]
+      "instance-types"  = [ "t3.small" ]
       "role"            = "argocd-${var.env_name}-general"
       "ami-type"        = "AL2_x86_64"
     }
@@ -113,7 +121,7 @@ resource "aws_secretsmanager_secret" "kubeconfig" {
 }
 
 resource "aws_secretsmanager_secret_version" "kubeconfig" {
-  lifecycle { ignore_changes = [secret_string] }
+  lifecycle { ignore_changes = [ secret_string ] }
   secret_id     = aws_secretsmanager_secret.kubeconfig.id
   secret_string = module.eks_kubeconfig.kubeconfig
 }

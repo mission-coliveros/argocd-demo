@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook
+spec:
+  generators:
+  - list:
+      elements:
+        - name: mission-dev
+        - name: mission-prod
+        - name: mission-mgmt
+  template:
+    metadata:
+      name: '{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/mission-coliveros/argocd-demo.git
+        targetRevision: HEAD
+        path: argocd-repo/projects/mission
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: argocd

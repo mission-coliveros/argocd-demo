@@ -1,29 +1,6 @@
-#resource "aws_iam_policy" "argocd_vault_plugin_nodegroup" {
-#  name = "${var.env_name}-argocd-vault-plugin-nodegroup"
-#  policy = jsonencode({
-#    Version = "2012-10-17"
-#    Statement = [
-#      {
-#        Sid = "ArgoCDSecrets"
-#        Action = [
-#          "secretsmanager:DescribeSecret",
-#          "secretsmanager:GetResourcePolicy",
-#          "secretsmanager:GetSecretValue",
-#          "secretsmanager:ListSecretVersionIds",
-#          "secretsmanager:ListSecrets"
-#        ]
-#        Effect = "Allow"
-#        Resource = [
-#          data.aws_secretsmanager_secret.gitops_repo_token.arn,
-#        ]
-#      }
-#    ]
-#  })
-#}
-
 module "argo_cd" {
   count  = var.deploy_argo_cd ? 1 : 0
-  source = "modules/argo_cd"
+  source = "./modules/argo_cd"
 
   env_name              = var.env_name
   argocd_version        = var.argocd_version
