@@ -6,21 +6,17 @@ spec:
   generators:
   - list:
       elements:
-      - cluster: argocd-demo-prod
-        url: https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com
-        valuesFile: Production
-        namespace: mission-api
       - cluster: argocd-demo-dev
         url: https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com
-        valuesFile: DevCody
+        environment_name: DevCody
         namespace: mission-api-cody
       - cluster: argocd-demo-dev
         url: https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com
-        valuesFile: DevBryan
+        environment_name: DevBryan
         namespace: mission-api-bryan
   template:
     metadata:
-      name: '{{cluster}}-guestbook'
+      name: '{{namespace}}'
     spec:
       project: default
       source:

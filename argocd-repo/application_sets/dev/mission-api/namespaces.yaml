@@ -6,31 +6,19 @@ spec:
   generators:
   - list:
       elements:
-      - cluster: argocd-demo-dev
-        url: https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com
-        valuesFile: DevCody
-        namespace: mission-api-cody
-      - cluster: argocd-demo-dev
-        url: https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com
-        valuesFile: DevBryan
-        namespace: mission-api-bryan
-      - cluster: argocd-demo-dev
-        url: https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com
-        valuesFile: DevEllis
-        namespace: mission-api-ellis
-      - cluster: argocd-demo-dev
-        url: https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com
-        valuesFile: DevMetin
-        namespace: mission-api-metin
+      - namespace: mission-api-cody
+      - namespace: mission-api-bryan
+      - namespace: mission-api-ellis
+      - namespace: mission-api-metin
   template:
     metadata:
-      name: '{{cluster}}-guestbook'
+      name: '{{namespace}}'
     spec:
-      project: default
+      project: "mission-dev"
       source:
         repoURL: https://github.com/argoproj/argo-cd.git
         targetRevision: HEAD
         path: applicationset/examples/list-generator/guestbook/{{cluster}}
       destination:
-        server: '{{url}}'
+        server: "https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com"
         namespace: {{namespace}}
