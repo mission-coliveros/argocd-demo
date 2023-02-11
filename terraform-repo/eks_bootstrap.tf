@@ -74,3 +74,11 @@ resource "helm_release" "load_balancer_controller" {
   }
 }
 
+resource "kubernetes_namespace_v1" "custom_namespaces" {
+  count = length(var.custom_namespaces)
+  metadata {
+    name = var.custom_namespaces[count.index].name
+    annotations = var.custom_namespaces[count.index].labels
+    labels = var.custom_namespaces[count.index].labels
+  }
+}

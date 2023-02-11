@@ -27,19 +27,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: POSTGRES_DB
-                  name: api
+                  name: {{ .Values.common.secret_id }}
             - name: POSTGRES_HOST_AUTH_METHOD
               valueFrom:
                 secretKeyRef:
                   key: POSTGRES_HOST_AUTH_METHOD
-                  name: api
+                  name: {{ .Values.common.secret_id }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
+                  name: {{ .Values.common.secret_id }}
                   key: POSTGRES_PASSWORD
-                  name: api
-            - name: POSTGRES_USER
-              value: {{ .Values.db.deployment.env.username }}
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.common.secret_id }}
+                  key: POSTGRES_USERNAME
           image: "{{ .Values.db.deployment.env.image.name }}:{{ .Values.db.deployment.env.image.tag }}"
           name: db
           ports:

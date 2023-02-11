@@ -1,7 +1,7 @@
 provider "aws" {
   region              = var.aws_region
   allowed_account_ids = [var.account_id]
-  profile = "mission-internal-intern-sandbox-2912"
+  profile             = "mission-internal-intern-sandbox-2912"
   default_tags {
     tags = {
       environment       = var.env_name

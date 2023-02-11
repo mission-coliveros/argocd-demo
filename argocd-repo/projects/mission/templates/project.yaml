@@ -5,13 +5,13 @@ metadata:
     argocd-autopilot.argoproj-labs.io/default-dest-server: https://kubernetes.default.svc
     argocd.argoproj.io/sync-options: PruneLast=true
     argocd.argoproj.io/sync-wave: "-2"
-  name: mission
+  name: {{ .Values.project_name }}
   namespace: argocd
 spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
-  description: Cricket/InterWell Health services
+  description: Mission Internal Workloads
   destinations:
   - namespace: '*'
     server: '*'

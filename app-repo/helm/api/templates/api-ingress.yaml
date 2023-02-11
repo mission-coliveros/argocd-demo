@@ -4,18 +4,16 @@ kind: Ingress
 metadata:
   name: api
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    alb.ingress.kubernetes.io/load-balancer-name: mission-api-{{ .Values.common.environment_name }}
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/group.name: mission-api-ingress
+    alb.ingress.kubernetes.io/group.name: mission-api
     alb.ingress.kubernetes.io/scheme: internet-facing
 spec:
-  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /api/(.*)
+      - path: /
         pathType: Prefix
         backend:
           service:

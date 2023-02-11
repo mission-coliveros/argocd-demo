@@ -1,3 +1,8 @@
+common:
+  secret_id: mission-api
+  environment_name: dev01
+  external_secrets_key: argocd-demo-dev/cluster-secrets/mission-api-01
+
 # API
 api:
   containerPort: 3000
@@ -6,16 +11,13 @@ api:
     replicas: 1
     containerPort: 6379
     env:
-      auth0:
-        domain: mission-staging.us.auth0.com
-        interwell_api_audience: https://mission-staging.us.auth0.com/api/v2/
-        management_api_audience: https://mission-staging.us.auth0.com/api/v2/
-      node_env: production
+      node_env: dev01
+      database_url: postgresql://fastapi:fastapi@db/fastapi
     image:
-      name: 070940067735.dkr.ecr.us-east-1.amazonaws.com/mission-api
-      tag: PR-53
+      name: 843238382912.dkr.ecr.us-west-2.amazonaws.com/mission-api
+      tag: 0.0.11
   ingress:
-    deploy: false
+    deploy: true
 
 # Database
 db:
@@ -31,6 +33,7 @@ db:
         tag: '14.5'
       type: postgresql
       username: admin
+      password: admin
 
 # Redis
 redis:

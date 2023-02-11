@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  annotations:
+    kompose.cmd: kompose convert -o k8s
+    kompose.image-pull-policy: Never
+    kompose.version: 1.26.1 (HEAD)
+  labels:
+    # io.kompose.service: api
+    app: api
+spec:
+  replicas: {{ .Values.api.deployment.replicas }}
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy: { }
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o k8s
+        kompose.image-pull-policy: Never
+        kompose.version: 1.26.1 (HEAD)
+      labels:
+        io.kompose.service: api
+        app: api
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - image: "{{ .Values.api.deployment.image.name }}:{{ .Values.api.deployment.image.tag }}"
+          imagePullPolicy: Always
+          name: api
+          ports:
+            - containerPort: {{ .Values.api.deployment.containerPort }}
+          resources: { }
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.api.deployment.containerPort }}
+              # scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 1
+          env:
+            # Plaintext variables from Helm values
+            - name: UVICORN_PORT
+              value: "{{ .Values.api.deployment.containerPort }}"
+            - name: POSTGRES_DB
+              value: {{ .Values.db.deployment.env.type }}://{{ .Values.db.deployment.env.username }}@{{ .Values.db.deployment.env.hostname }}:{{ .Values.db.deployment.containerPort }}/{{.Values.db.deployment.env.databaseName }}
+            - name: NODE_ENV
+              value: "{{ .Values.api.deployment.env.node_env }}"
+            - name: IMAGE_ID
+              value: "{{ .Values.api.deployment.image.name }}{{ .Values.api.deployment.image.tag }}"
+            # Secret references
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.common.secret_id }}
+                  key: POSTGRES_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.common.secret_id }}
+                  key: POSTGRES_PASSWORD
+      restartPolicy: Always

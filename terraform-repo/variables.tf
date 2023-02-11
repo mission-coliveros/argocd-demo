@@ -67,3 +67,10 @@ variable "argocd_target_clusters" {
 variable "deploy_argo_manifests" {
   default = false
 }
+
+variable "custom_namespaces" {
+  type = list(object({
+    name: string
+    labels: map(string)
+  }))
+}
