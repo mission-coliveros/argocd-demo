@@ -18,7 +18,7 @@ spec:
             cluster_url: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
   template:
     metadata:
-      name: '{{environment_name}}'
+      name: ' mission-api-{{environment_name}}'
     spec:
       project: "mission-prod"
       source:
@@ -27,7 +27,7 @@ spec:
         targetRevision: "{{helm_tag}}"
         helm:
           valueFiles:
-          - "values-prod.yaml"
+            - "values-prod.yaml"
           parameters:
             - name: "common.environment_name"
               value: '{{environment_name}}'
@@ -44,8 +44,8 @@ spec:
           selfHeal: true
           allowEmpty: false
         syncOptions:
-        - "PruneLast=true"
-        - "ApplyOutOfSyncOnly=true"
+          - "PruneLast=true"
+          - "ApplyOutOfSyncOnly=true"
 #        - "CreateNamespace=true"
 #        managedNamespaceMetadata: # Sets the metadata for the application namespace. Only valid if CreateNamespace=true (see above), otherwise it's a no-op.
 #          labels: # The labels to set on the application namespace
