@@ -18,7 +18,7 @@ spec:
             cluster_url: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
   template:
     metadata:
-      name: ' mission-api-{{environment_name}}'
+      name: 'mission-api-{{environment_name}}'
     spec:
       project: "mission-prod"
       source:
