@@ -23,7 +23,7 @@ spec:
           value: "0.0.15"
   destination:
     server: "https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com"
-    namespace: "mission-api"
+    namespace: "mission-api-test"
   syncPolicy:
     automated:
       prune: true
