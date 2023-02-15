@@ -147,7 +147,7 @@ resource "kubernetes_manifest" "argocd_application_demo" {
     "apiVersion" = "argoproj.io/v1alpha1"
     "kind"       = "Application"
     "metadata"   = {
-      "name"      = "api"
+      "name"      = "mission-api"
       "namespace" = "argocd"
     }
     "spec" = {

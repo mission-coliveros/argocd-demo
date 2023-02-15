@@ -1,27 +1,27 @@
 apiVersion: "argoproj.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: "mission-api-prod"
+  name: "mission-api-staging"
   namespace: "argocd"
   labels:
     app: api
 spec:
-  project: "mission-prod"
+  project: "mission-staging"
   source:
     repoURL: "843238382912.dkr.ecr.us-west-2.amazonaws.com"
     chart: "mission-api-helm"
     targetRevision: "0.0.22"
     helm:
-      valuesFile: "values-prod.yaml"
+      valuesFile: "values-staging.yaml"
       parameters:
         - name: "common.environment_name"
           value: 'mission-api'
         - name: "common.namespace"
-          value: 'mission-api-prod'
+          value: 'mission-api-staging'
         - name: "api.deployment.image.tag"
           value: "0.0.15"
   destination:
-    server: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
+    server: "https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com"
     namespace: "mission-api"
   syncPolicy:
     automated:
