@@ -24,7 +24,7 @@ spec:
         chart: "mission-api-helm"
         targetRevision: "{{helm_tag}}"
         helm:
-          valuesFiles:
+          valueFiles:
           - "values-dev.yaml"
           parameters:
             - name: "common.environment_name"
