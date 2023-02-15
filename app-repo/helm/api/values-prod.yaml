@@ -1,7 +1,8 @@
 common:
   secret_id: mission-api
   environment_name: prod
-  external_secrets_key: argocd-demo-prod/cluster-secrets/mission-api
+  external_secrets_key: argocd-demo-prod/cluster-secrets/mission-api-01
+  namespace: mission-api
 
 # API
 api:
@@ -11,11 +12,10 @@ api:
     replicas: 1
     containerPort: 6379
     env:
-      node_env: prod
       database_url: postgresql://fastapi:fastapi@db/fastapi
     image:
       name: 843238382912.dkr.ecr.us-west-2.amazonaws.com/mission-api
-      tag: 0.0.3
+      tag: 0.0.15
   ingress:
     deploy: true
 

@@ -2,7 +2,9 @@ common:
   secret_id: mission-api
   environment_name: example
   external_secrets_key: argocd-demo-dev/cluster-secrets/mission-api-01
-  
+  namespace: mission-api
+
+
 # API
 api:
   containerPort: 3000
@@ -15,7 +17,7 @@ api:
       database_url: postgresql://fastapi:fastapi@db/fastapi
     image:
       name: 843238382912.dkr.ecr.us-west-2.amazonaws.com/mission-api
-      tag: 0.0.3
+      tag: 0.0.15
   ingress:
     deploy: true
 

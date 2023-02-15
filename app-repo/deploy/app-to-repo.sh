@@ -3,7 +3,7 @@ set -o pipefail
 
 export ROOT_PATH="../"
 export IMAGE_NAME="mission-api"
-export IMAGE_TAG="0.0.11"
+export IMAGE_TAG="0.0.15"
 
 export AWS_PROFILE=mission-internal-intern-sandbox-2912
 export AWS_REGION='us-west-2'

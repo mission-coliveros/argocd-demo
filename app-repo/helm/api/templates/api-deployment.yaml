@@ -51,9 +51,9 @@ spec:
             - name: POSTGRES_DB
               value: {{ .Values.db.deployment.env.type }}://{{ .Values.db.deployment.env.username }}@{{ .Values.db.deployment.env.hostname }}:{{ .Values.db.deployment.containerPort }}/{{.Values.db.deployment.env.databaseName }}
             - name: NODE_ENV
-              value: "{{ .Values.api.deployment.env.node_env }}"
+              value: "{{ .Values.common.environment_name }}"
             - name: IMAGE_ID
-              value: "{{ .Values.api.deployment.image.name }}{{ .Values.api.deployment.image.tag }}"
+              value: "{{ .Values.api.deployment.image.name }}:{{ .Values.api.deployment.image.tag }}"
             # Secret references
             - name: POSTGRES_USER
               valueFrom:

@@ -119,7 +119,7 @@ resource "kubernetes_manifest" "argocd_application_demo" {
     "apiVersion" = "argoproj.io/v1alpha1"
     "kind"       = "Application"
     "metadata"   = {
-      "name"      = "demo"
+      "name"      = "mission-api"
       "namespace" = "argocd"
     }
     "spec" = {
@@ -129,12 +129,7 @@ resource "kubernetes_manifest" "argocd_application_demo" {
       }
       "project" = "default"
       "source"  = {
-        "helm" = {
-          "valueFiles" = [
-            "values-${var.env_name}.yaml",
-          ]
-        }
-        "path"           = "argo_cd/apps/demo"
+        "path"           = "argocd-repo/applications/mission-api"
         "repoURL"        = "https://github.com/mission-coliveros/argocd-demo.git"
         "targetRevision" = "HEAD"
       }
@@ -144,117 +139,3 @@ resource "kubernetes_manifest" "argocd_application_demo" {
     }
   }
 }
-#
-#resource "kubernetes_manifest" "argocd_applicationset" {
-#  count = var.deploy_argo_manifests ? 1 : 0
-#
-#  manifest = {
-#    "apiVersion" = "argoproj.io/v1alpha1"
-#    "kind"       = "ApplicationSet"
-#    "metadata"   = {
-#      "name" = "demo"
-#    }
-#    "spec" = {
-#      "generators" : {
-#        "list" : {
-#          "elements" : [
-#            {
-#              "cluster" : "argocd-demo-prod"
-#              "url" : "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
-#              "valuesFile" : "production"
-#              "namespace" : "mission-api"
-#            },
-#            {
-#              "cluster" : "argocd-demo-dev"
-#              "url" : "https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com"
-#              "valuesFile" : "dev01"
-#              "namespace" : "mission-api-dev01"
-#            },
-#            {
-#              "cluster" : "argocd-demo-dev"
-#              "url" : "https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com"
-#              "valuesFile" : "dev02"
-#              "namespace" : "mission-api-dev02"
-#            }
-#          ]
-#        }
-#      }
-#      "template" : {
-#        "metadata" : {
-#          "name" : '{{cluster}}-guestbook'
-#        }
-#        "spec" : {
-#          "project" : "{{cluster}}"
-#          "source" : {
-#            "repoURL" : "https://github.com/argoproj/argo-cd.git"
-#            "targetRevision" : "HEAD"
-#            "path" : "applicationset/examples/list-generator/guestbook/{{cluster}}"
-#          }
-#          "destination": {
-#            "server": '{{url}}'
-#            "namespace": "{{namespace}}"
-#          }
-#        }
-#      }
-#    }
-#  }
-#}
-
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: mycluster-secret
-#  labels:
-#    argocd.argoproj.io/secret-type: cluster
-#type: Opaque
-#stringData:
-#  name: mycluster.com
-#  server: https://mycluster.com
-#  config: |
-#    {
-#      "existingKubeconfigSecret": "mycluster-kubeconfig"
-#    }
-
-#resource "kubernetes_secret_v1" "dev_cluster" {
-#
-#  lifecycle { ignore_changes = [data] }
-#
-#  metadata {
-#    name      = "cluster-${data.aws_eks_cluster.dev.id}"
-#    namespace = helm_release.argocd.namespace
-#    labels    = {
-#      "argocd.argoproj.io/secret-type" : "cluster"
-#    }
-#    annotations = {
-#      "managed-by" = "argocd.argoproj.io"
-#    }
-#  }
-#
-#  data = {
-#    name   = data.aws_eks_cluster.dev.id
-#    server = data.aws_eks_cluster.dev.endpoint
-#    config = data.aws_secretsmanager_secret_version.dev_kubeconfig.secret_string
-#  }
-#}
-#
-#resource "kubernetes_secret_v1" "prod_cluster" {
-#
-#  lifecycle { ignore_changes = [data] }
-#
-#  metadata {
-#    name      = "cluster-${data.aws_eks_cluster.prod.id}"
-#    namespace = helm_release.argocd.namespace
-#    labels    = {
-#      "argocd.argoproj.io/secret-type" : "cluster"
-#    }
-#    annotations = {
-#      "managed-by" = "argocd.argoproj.io"
-#    }
-#  }
-#
-#  data = {
-#    name   = data.aws_eks_cluster.prod.id
-#    server = data.aws_eks_cluster.prod.endpoint
-#    config = data.aws_secretsmanager_secret_version.prod_kubeconfig.secret_string
-#  }
-#}

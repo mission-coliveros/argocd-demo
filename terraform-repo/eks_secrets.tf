@@ -12,18 +12,38 @@ resource "helm_release" "external_secrets_operator" {
   }
 }
 
-#  name       = "aws-load-balancer-controller"
-#  repository = "https://aws.github.io/eks-charts"
-#  chart      = "aws-load-balancer-controller"
-#  namespace  = "kube-system"
-#  depends_on = [kubernetes_service_account.load
+module "external_secrets_operator_service_account_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.9.1"
 
-resource "aws_iam_user" "external_secrets_operator" {
-  name = "${local.stack_env_name}-external-secrets-operator"
+  role_name                              = "${local.cluster_name}-external-secrets-operator"
+  role_policy_arns = {
+    external_secrets: aws_iam_policy.external_secrets_operator.arn
+  }
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:external-secrets-operator"]
+    }
+  }
 }
 
-resource "aws_iam_user_policy" "external_secrets_operator" {
-  user   = aws_iam_user.external_secrets_operator.name
+resource "kubernetes_service_account" "external_secrets_operator" {
+  metadata {
+    name      = "external-secrets-operator"
+    namespace = "kube-system"
+    labels = {
+      "app.kubernetes.io/name"      = "external-secrets-operator"
+      "app.kubernetes.io/component" = "controller"
+    }
+    annotations = {
+      "eks.amazonaws.com/role-arn"               = module.external_secrets_operator_service_account_role.iam_role_arn
+      "eks.amazonaws.com/sts-regional-endpoints" = "true"
+    }
+  }
+}
+
+resource "aws_iam_policy" "external_secrets_operator" {
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -41,23 +61,8 @@ resource "aws_iam_user_policy" "external_secrets_operator" {
   })
 }
 
-resource "aws_iam_access_key" "external_secrets_operator" {
-  user = aws_iam_user.external_secrets_operator.name
-}
-
-resource "kubernetes_secret" "external_secrets_operator_aws_credentials" {
-  metadata {
-    name      = "external-secrets-operator-aws-credentials"
-    namespace = "external-secrets"
-  }
-  type = "Opaque"
-  data = {
-    "KEYID" : aws_iam_access_key.external_secrets_operator.id
-    "SECRETKEY" : aws_iam_access_key.external_secrets_operator.secret
-  }
-}
-
 resource "kubernetes_manifest" "external_secrets_operator_cluster_store" {
+  count = var.deploy_eso_manifests ? 1 : 0
   manifest = {
     "apiVersion" = "external-secrets.io/v1beta1"
     "kind"       = "ClusterSecretStore"
@@ -75,85 +80,55 @@ resource "kubernetes_manifest" "external_secrets_operator_cluster_store" {
       "provider" = {
         "aws" = {
           "region" : var.aws_region
-          "auth" = {
-            "secretRef" = {
-              "accessKeyIDSecretRef" = {
-                "key"  = "KEYID"
-                "name" = kubernetes_secret.external_secrets_operator_aws_credentials.metadata[ 0 ].name
-                "namespace": "external-secrets"
-              }
-              "secretAccessKeySecretRef" = {
-                "key"  = "SECRETKEY"
-                "name" = kubernetes_secret.external_secrets_operator_aws_credentials.metadata[ 0 ].name
-                "namespace": "external-secrets"
+          "service" = "SecretsManager"
+          "auth": {
+            "jwt": {
+              "serviceAccountRef": {
+                "name": kubernetes_service_account.external_secrets_operator.metadata[0].name
+                "namespace": kubernetes_service_account.external_secrets_operator.metadata[0].namespace
               }
             }
           }
-          "region"  = var.aws_region
-          "service" = "SecretsManager"
         }
       }
     }
   }
 }
+
 #
-#resource "kubernetes_manifest" "external_secrets_operator_cluster_secret_mission_api" {
-#  depends_on = [ aws_secretsmanager_secret_version.mission_api ]
-#  manifest   = {
-#    "apiVersion" = "external-secrets.io/v1beta1"
-#    "kind"       = "ClusterExternalSecret"
-#    "metadata"   = {
-#      "name" = "mission-api"
-#    }
-#    "spec" = {
-#      "externalSecretName" : "mission-api"
-#      "namespaceSelector" : {
-#        "matchLabels" : { "app" : "mission-api" }
-#      }
-#      "refreshTime" : "1m"
-#      "externalSecretSpec" : {
-#        "dataFrom" = [
-#          { "extract" : { "key" : aws_secretsmanager_secret.mission_api.name } }
-#        ]
-#        "refreshInterval" = "5m"
-#        "secretStoreRef"  = {
-#          "kind" = "ClusterSecretStore"
-#          "name" = kubernetes_manifest.external_secrets_operator_cluster_store.manifest.metadata.name
-#        }
-#        "target" = {
-#          "creationPolicy" = "Owner"
-#          "name"           = "mission-api"
-#        }
-#      }
-#    }
-#  }
-#}
-#
-#resource "kubernetes_manifest" "external_secrets_operator_secret_mission_api" {
-#  depends_on = [ aws_secretsmanager_secret_version.mission_api ]
-#  manifest   = {
-#    "apiVersion" = "external-secrets.io/v1beta1"
-#    "kind"       = "ExternalSecret"
-#    "metadata"   = {
-#      "name" = "mission-api"
-#      "namespace" : "mission-api"
-#    }
-#    "spec" = {
-#      "dataFrom" = [
-#        { "extract" : { "key" : aws_secretsmanager_secret.mission_api.name } }
-#      ]
-#      "refreshInterval" = "5m"
-#      "secretStoreRef"  = {
-#        "kind" = "ClusterSecretStore"
-#        "name" = kubernetes_manifest.external_secrets_operator_cluster_store.manifest.metadata.name
-#      }
-#      "target" = {
-#        "creationPolicy" = "Owner"
-#        "name"           = "mission-api"
-#      }
-#    }
-#  }
-#}
+resource "kubernetes_manifest" "external_secrets_operator_cluster_secret_mission_api" {
+  count = var.deploy_eso_manifests ? 1 : 0
+
+  depends_on = [ aws_secretsmanager_secret_version.mission_api ]
+  manifest   = {
+    "apiVersion" = "external-secrets.io/v1beta1"
+    "kind"       = "ClusterExternalSecret"
+    "metadata"   = {
+      "name" = "mission-api"
+    }
+    "spec" = {
+      "externalSecretName" : "mission-api"
+      "namespaceSelector" : {
+        "matchLabels" : { "app" : "mission-api" }
+      }
+      "refreshTime" : "1m"
+      "externalSecretSpec" : {
+        "dataFrom" = [
+          { "extract" : { "key" : aws_secretsmanager_secret.mission_api.name } }
+        ]
+        "refreshInterval" = "5m"
+        "secretStoreRef"  = {
+          "kind" = "ClusterSecretStore"
+          "name" = kubernetes_manifest.external_secrets_operator_cluster_store[0].manifest.metadata.name
+        }
+        "target" = {
+          "creationPolicy" = "Owner"
+          "name"           = "mission-api"
+        }
+      }
+    }
+  }
+}
 
 resource "aws_secretsmanager_secret" "mission_api" {
   name = "${local.stack_env_name}/cluster-secrets/mission-api-01"

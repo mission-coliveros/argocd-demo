@@ -2,9 +2,14 @@ env_name          = "prod"
 aws_region        = "us-west-2"
 vpc_subnet_prefix = "10.21"
 
+#deploy_eso_manifests = false
+
 custom_namespaces = [
   {
-    name : "misison-api-prod"
-    labels : { "app" : "mission-api" }
-  }
+    name : "mission-api-production"
+    labels : {
+      "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
+    }
+  },
 ]

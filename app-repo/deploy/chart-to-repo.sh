@@ -2,8 +2,8 @@ set -e
 set -o pipefail
 
 export HELM_PATH="../helm/api"
-export APP_VERSION='0.0.1'
-export CHART_VERSION='0.0.1'
+export APP_VERSION='0.0.22'
+export CHART_VERSION='0.0.22'
 
 export AWS_PROFILE=mission-internal-intern-sandbox-2912
 export AWS_REGION='us-west-2'
@@ -19,14 +19,14 @@ helm lint ${HELM_PATH}
 helm package ${HELM_PATH} --app-version "${APP_VERSION}" --version "${CHART_VERSION}"
 
 # Login to Helm repo
-#aws ecr get-login-password \
-#--region "${AWS_REGION}" | helm registry login \
-#--username AWS \
-#--password-stdin "${AWS_ECR_REGISTRY}"
+aws ecr get-login-password \
+--region "${AWS_REGION}" | helm registry login \
+--username AWS \
+--password-stdin "${AWS_ECR_REGISTRY}"
 
 # Push to repository
-#helm push "mission-api-helm-${CHART_VERSION}.tgz" "oci://${AWS_ECR_REPO}/"
+helm push "mission-api-helm-${CHART_VERSION}.tgz" "oci://${AWS_ECR_REGISTRY}/"
 
 # Cleanup
 rm "mission-api-helm-${CHART_VERSION}.tgz"
-#helm registry logout "${AWS_ECR_REGISTRY}"
+helm registry logout "${AWS_ECR_REGISTRY}"

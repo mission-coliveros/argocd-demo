@@ -7,6 +7,6 @@ module "argo_cd" {
   deploy_argo_manifests = var.deploy_argo_manifests
   gitops_repo_password  = data.aws_secretsmanager_secret_version.gitops_repo_token.secret_string
   gitops_repo_username  = "admin"
-  image_repo_name       = "argocd-demo-container-images"
+  image_repo_name       = "mission-api-helm"
   ecr_updater_repos     = [aws_ecr_repository.helm_repo[0].arn]
 }
