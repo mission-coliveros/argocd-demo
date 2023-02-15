@@ -4,7 +4,5 @@ aws_region        = "us-west-2"
 
 
 deploy_argo_cd = true
-#deploy_argo_manifests  = false # Toggle on after cluster is created.  Cannot be enabled before cluster is applied
-#argocd_target_clusters = [""]
-
-deploy_eso_manifests = false
+deploy_argo_manifests  = true
+deploy_eso_manifests = true

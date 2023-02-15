@@ -112,6 +112,34 @@ resource "kubernetes_secret_v1" "demo_api_repo" {
 # Argo workloads
 # -------------------------
 
+resource "kubernetes_manifest" "argocd_projects" {
+  count = var.deploy_argo_manifests ? 1 : 0
+
+  manifest = {
+    "apiVersion" = "argoproj.io/v1alpha1"
+    "kind"       = "Application"
+    "metadata"   = {
+      "name"      = "projects"
+      "namespace" = "argocd"
+    }
+    "spec" = {
+      "destination" = {
+        "namespace" = "argocd"
+        "server"    = "https://kubernetes.default.svc"
+      }
+      "project" = "default"
+      "source"  = {
+        "path"           = "argocd-repo/projects"
+        "repoURL"        = "https://github.com/mission-coliveros/argocd-demo.git"
+        "targetRevision" = "HEAD"
+      }
+      "syncPolicy" = {
+        "automated" = {}
+      }
+    }
+  }
+}
+
 resource "kubernetes_manifest" "argocd_application_demo" {
   count = var.deploy_argo_manifests ? 1 : 0
 
@@ -119,7 +147,7 @@ resource "kubernetes_manifest" "argocd_application_demo" {
     "apiVersion" = "argoproj.io/v1alpha1"
     "kind"       = "Application"
     "metadata"   = {
-      "name"      = "mission-api"
+      "name"      = "api"
       "namespace" = "argocd"
     }
     "spec" = {

@@ -17,7 +17,7 @@ spec:
     spec:
       project: "mission-prod"
       source:
-        enableOCI: "true"
+#        enableOCI: "true"
         repoURL: "843238382912.dkr.ecr.us-west-2.amazonaws.com"
         chart: "mission-api-helm"
         targetRevision: "{{helm_tag}}"
