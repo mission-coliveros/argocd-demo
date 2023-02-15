@@ -49,6 +49,12 @@ variable "k8s_version" {
   description = "Required K8s version"
 }
 
+
+variable "deploy_eso_manifests" {
+  default = true
+  type = bool
+}
+
 # -------------------------------------------------------- Argo --------------------------------------------------------
 
 variable "deploy_argo_cd" {
@@ -56,7 +62,7 @@ variable "deploy_argo_cd" {
 }
 
 variable "argocd_version" {
-  default = "5.18.1"
+  default = "5.20.3"
 }
 
 variable "argocd_target_clusters" {
@@ -69,6 +75,7 @@ variable "deploy_argo_manifests" {
 }
 
 variable "custom_namespaces" {
+  default = []
   type = list(object({
     name: string
     labels: map(string)

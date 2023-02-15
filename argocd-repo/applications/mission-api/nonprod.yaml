@@ -1,28 +1,31 @@
 apiVersion: "argoproj.io/v1alpha1"
 kind: "ApplicationSet"
 metadata:
-  name: "mission-api-prod"
+  name: "mission-api-dev"
 spec:
   generators:
     - list:
         elements:
-          - cluster_url: https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com
-            environment_name: mission-api
-            namespace: mission-api
-            helm_tag: "0.0.22"
+          - environment_name: test
+            namespace: mission-api-test
+            helm_tag: "0.0.20"
+            api_image_tag: "0.0.15"
+          - environment_name: staging
+            namespace: mission-api-staging
+            helm_tag: "0.0.20"
             api_image_tag: "0.0.15"
   template:
     metadata:
       name: '{{namespace}}'
     spec:
-      project: "mission-prod"
+      project: "mission-dev"
       source:
         enableOCI: "true"
         repoURL: "843238382912.dkr.ecr.us-west-2.amazonaws.com"
         chart: "mission-api-helm"
         targetRevision: "{{helm_tag}}"
         helm:
-          valuesFile: "values-prod.yaml"
+          valuesFile: "values-dev.yaml"
           parameters:
             - name: "common.environment_name"
               value: '{{environment_name}}'
@@ -31,7 +34,7 @@ spec:
             - name: "api.deployment.image.tag"
               value: '{{api_image_tag}}'
       destination:
-        server: "{{cluster_url}}"
+        server: "https://F40F64ECB7956B66F6DE3604BD41EA54.sk1.us-west-2.eks.amazonaws.com"
         namespace: "{{namespace}}"
       syncPolicy:
         automated:

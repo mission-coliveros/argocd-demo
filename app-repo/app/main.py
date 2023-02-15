@@ -11,9 +11,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return f"Hello world!  This is a basic API to demo ArgoCD cluster management\n" \
-           f"Environment: `{os.environ.get('NODE_ENV')}`\n" \
-           f"Image ID: `{os.environ.get('IMAGE_ID')}`"
+    return f"ArgoCD demo API.  Environment: '{os.environ.get('NODE_ENV')}'.  Image ID: `{os.environ.get('IMAGE_ID')}`"
 
 
 @app.get("/user")

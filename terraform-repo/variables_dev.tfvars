@@ -4,13 +4,17 @@ vpc_subnet_prefix = "10.11"
 
 custom_namespaces = [
   {
-    name : "mission-api-dev-01"
-    labels : { "app" : "mission-api" }
-  },
-  {
-    name : "mission-api-dev-02"
+    name : "mission-api-test"
     labels : {
       "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
+    }
+  },
+  {
+    name : "mission-api-staging"
+    labels : {
+      "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
     }
   }
 ]
