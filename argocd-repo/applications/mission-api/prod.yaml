@@ -7,12 +7,12 @@ spec:
     - list:
         elements:
           - environment_name: prod-us-west-1
-            namespace: mission-api
+            namespace: mission-api-prod-us-west-1
             helm_tag: "0.0.22"
             api_image_tag: "0.0.15"
             cluster_url: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
           - environment_name: prod-us-west-2
-            namespace: mission-api
+            namespace: mission-api-prod-us-west-2
             helm_tag: "0.0.22"
             api_image_tag: "0.0.15"
             cluster_url: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
