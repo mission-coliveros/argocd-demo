@@ -12,7 +12,7 @@ spec:
     chart: "mission-api-helm"
     targetRevision: "0.0.22"
     helm:
-      valuesFile: "values-staging.yaml"
+      valueFiles: "values-dev.yaml"
       parameters:
         - name: "common.environment_name"
           value: 'mission-api'
