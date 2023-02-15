@@ -147,7 +147,7 @@ resource "kubernetes_manifest" "argocd_application_demo" {
     "apiVersion" = "argoproj.io/v1alpha1"
     "kind"       = "Application"
     "metadata"   = {
-      "name"      = "mission-api"
+      "name"      = "applications"
       "namespace" = "argocd"
     }
     "spec" = {
@@ -162,7 +162,10 @@ resource "kubernetes_manifest" "argocd_application_demo" {
         "targetRevision" = "HEAD"
       }
       "syncPolicy" = {
-        "automated" = {}
+        "automated" = {
+          "prune": true,
+          "selfHeal": true
+        }
       }
     }
   }

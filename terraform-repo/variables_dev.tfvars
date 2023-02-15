@@ -16,5 +16,33 @@ custom_namespaces = [
       "app" : "mission-api",
       "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
     }
+  },
+  {
+    name : "mission-api-dev-cody"
+    labels : {
+      "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
+    }
+  },
+  {
+    name : "mission-api-dev-bryan"
+    labels : {
+      "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
+    }
+  },
+  {
+    name : "mission-api-dev-ellis"
+    labels : {
+      "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
+    }
+  },
+  {
+    name : "mission-api-dev-metin"
+    labels : {
+      "app" : "mission-api",
+      "elbv2.k8s.aws/pod-readiness-gate-inject" : "enabled"
+    }
   }
 ]
