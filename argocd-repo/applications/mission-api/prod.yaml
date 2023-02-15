@@ -6,13 +6,13 @@ spec:
   generators:
     - list:
         elements:
-          - environment_name: prod-us-west-1
-            namespace: mission-api-prod-us-west-1
+          - environment_name: "prod-us-west-1"
+            namespace: "mission-api-prod-us-west-1"
             helm_tag: "0.0.22"
             api_image_tag: "0.0.15"
             cluster_url: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
-          - environment_name: prod-us-west-2
-            namespace: mission-api-prod-us-west-2
+          - environment_name: "prod-us-west-2"
+            namespace: "mission-api-prod-us-west-2"
             helm_tag: "0.0.22"
             api_image_tag: "0.0.15"
             cluster_url: "https://2D5AF68D64DDEEEC928AFCA8D89DED39.gr7.us-west-2.eks.amazonaws.com"
@@ -30,11 +30,11 @@ spec:
             - "values-prod.yaml"
           parameters:
             - name: "common.environment_name"
-              value: '{{environment_name}}'
+              value: "{{environment_name}}"
             - name: "common.namespace"
-              value: '{{namespace}}'
+              value: "{{namespace}}"
             - name: "api.deployment.image.tag"
-              value: '{{api_image_tag}}'
+              value: "{{api_image_tag}}"
       destination:
         server: "{{cluster_url}}"
         namespace: "{{namespace}}"
