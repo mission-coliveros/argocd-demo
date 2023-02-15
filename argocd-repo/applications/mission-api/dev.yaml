@@ -7,11 +7,11 @@ spec:
     - list:
         elements:
           - environment_name: dev-cody
-            namespace: dev-cody-mission-api
+            namespace: mission-api-dev-cody
             helm_tag: "0.0.20"
             api_image_tag: "0.0.15"
           - environment_name: dev-bryan
-            namespace: dev-bryan-mission-api
+            namespace: mission-api-dev-bryan
             helm_tag: "0.0.20"
             api_image_tag: "0.0.15"
   template:
