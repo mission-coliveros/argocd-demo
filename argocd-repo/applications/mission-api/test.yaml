@@ -5,6 +5,8 @@ metadata:
   namespace: "argocd"
   labels:
     app: api
+    helm_tag: "0.0.22"
+    image_tag: "0.0.15"
 spec:
   project: "mission-test"
   source:

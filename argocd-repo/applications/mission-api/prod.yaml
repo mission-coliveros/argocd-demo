@@ -21,6 +21,8 @@ spec:
       name: 'mission-api-{{environment_name}}'
       labels:
         app: api
+        helm_tag: "{{helm_tag}}"
+        image_tag: "{{api_image_tag}}"
     spec:
       project: "mission-prod"
       source:
