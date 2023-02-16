@@ -19,15 +19,15 @@ module "vpc" {
   ]
 
   tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared" # Required for AWS Load Balancer Controller integration
   }
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared" # Required for AWS Load Balancer Controller integration
     "kubernetes.io/role/elb"                      = 1
   }
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared" # Required for AWS Load Balancer Controller integration
     "kubernetes.io/role/internal_elb"             = 1
   }
 }

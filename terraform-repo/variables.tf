@@ -7,6 +7,7 @@ variable "account_id" {
 variable "aws_region" {
   type        = string
   description = "The AWS Region to deploy resources"
+  default     = "us-west-2"
 }
 
 variable "stack_name" {
@@ -52,7 +53,7 @@ variable "k8s_version" {
 
 variable "deploy_eso_manifests" {
   default = true
-  type = bool
+  type    = bool
 }
 
 # -------------------------------------------------------- Argo --------------------------------------------------------
@@ -77,7 +78,7 @@ variable "deploy_argo_manifests" {
 variable "custom_namespaces" {
   default = []
   type = list(object({
-    name: string
-    labels: map(string)
+    name : string
+    labels : map(string)
   }))
 }
