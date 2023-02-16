@@ -15,7 +15,7 @@ api:
       database_url: postgresql://fastapi:fastapi@db/fastapi
     image:
       name: 843238382912.dkr.ecr.us-west-2.amazonaws.com/mission-api
-      tag: 0.0.15
+      tag: 0.0.15  # Image tag can be overriden in ArgoCD  This value isn't actually used
   ingress:
     deploy: true
 

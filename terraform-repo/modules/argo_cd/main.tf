@@ -85,7 +85,7 @@ resource "kubernetes_secret_v1" "gitops_repo" {
 }
 
 resource "kubernetes_secret_v1" "demo_api_repo" {
-  lifecycle { ignore_changes = [data] }
+  lifecycle { ignore_changes = [ data ] }
 
   metadata {
     generate_name = "repo-"
@@ -134,7 +134,10 @@ resource "kubernetes_manifest" "argocd_projects" {
         "targetRevision" = "HEAD"
       }
       "syncPolicy" = {
-        "automated" = {}
+        "automated" = {
+          "prune" : true,
+          "selfHeal" : true
+        }
       }
     }
   }
@@ -163,10 +166,23 @@ resource "kubernetes_manifest" "argocd_application_demo" {
       }
       "syncPolicy" = {
         "automated" = {
-          "prune": true,
-          "selfHeal": true
+          "prune" : true,
+          "selfHeal" : true
         }
       }
     }
   }
+}
+
+resource "aws_secretsmanager_secret" "argocd_admin_password" {
+  name = "${var.stack_name}-${var.env_name}/argocd/inital_admin_password"
+}
+
+resource "aws_secretsmanager_secret_version" "argocd_admin_password" {
+  secret_id = aws_secretsmanager_secret.argocd_admin_password.id
+
+  secret_string = jsonencode({
+    "username" : "admin"
+    "password" : data.kubernetes_secret_v1.argocd_admin_password.data["password"]
+  })
 }

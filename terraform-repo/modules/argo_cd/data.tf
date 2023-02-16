@@ -13,3 +13,19 @@ data "aws_eks_cluster" "dev" {
 data "aws_eks_cluster" "prod" {
   name = "argocd-demo-prod"
 }
+
+data "kubernetes_secret_v1" "argocd_admin_password" {
+  depends_on = [helm_release.argocd]
+  metadata {
+    name      = "argocd-initial-admin-secret"
+    namespace = helm_release.argocd.namespace
+  }
+}
+
+data "kubernetes_service_v1" "argocd_server" {
+  depends_on = [helm_release.argocd]
+  metadata {
+    name      = "argocd-server"
+    namespace = helm_release.argocd.namespace
+  }
+}

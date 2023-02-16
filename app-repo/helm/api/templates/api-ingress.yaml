@@ -4,8 +4,8 @@ kind: Ingress
 metadata:
   name: api
   annotations:
-{{/*    alb.ingress.kubernetes.io/load-balancer-name: mission-api-{{ .Values.common.environment_name }}*/}}
     kubernetes.io/ingress.class: alb
+    # alb.ingress.kubernetes.io/load-balancer-name: mission-api-{{ .Values.common.environment_name }}
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: "{{ .Values.common.namespace }}"
     alb.ingress.kubernetes.io/scheme: internet-facing

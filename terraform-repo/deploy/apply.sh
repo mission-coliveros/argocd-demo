@@ -2,7 +2,7 @@ set -e
 set -o pipefail
 
 export AWS_PROFILE=mission-internal-intern-sandbox-2912
-export TF_CHDIR="../../"
+export TF_CHDIR="../"
 export BUCKET_PREFIX="mission-argocd-demo"
 export TF_ENV="${1}"
 

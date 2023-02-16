@@ -108,24 +108,6 @@ module "eks" {
   }
 }
 
-## Create secret of kubeconfig, to be passed into Argo management cluster
-#module "eks_kubeconfig" {
-#  source  = "hyperbadger/eks-kubeconfig/aws"
-#  version = "2.0.0"
-#
-#  cluster_name = module.eks.cluster_id
-#}
-#
-#resource "aws_secretsmanager_secret" "kubeconfig" {
-#  name = "argocd/clusters/kubeconfigs/${module.eks.cluster_id}"
-#}
-#
-#resource "aws_secretsmanager_secret_version" "kubeconfig" {
-#  lifecycle { ignore_changes = [ secret_string ] }
-#  secret_id     = aws_secretsmanager_secret.kubeconfig.id
-#  secret_string = module.eks_kubeconfig.kubeconfig
-#}
-
 resource "kubernetes_namespace_v1" "custom_namespaces" {
   count = length(var.custom_namespaces)
   metadata {
@@ -133,4 +115,31 @@ resource "kubernetes_namespace_v1" "custom_namespaces" {
     annotations = var.custom_namespaces[count.index].labels
     labels      = var.custom_namespaces[count.index].labels
   }
+}
+
+
+
+
+
+
+
+
+# Remove/test without secrets deployed
+
+# Create secret of kubeconfig, to be passed into Argo management cluster
+module "eks_kubeconfig" {
+  source  = "hyperbadger/eks-kubeconfig/aws"
+  version = "2.0.0"
+
+  cluster_name = module.eks.cluster_id
+}
+
+resource "aws_secretsmanager_secret" "kubeconfig" {
+  name = "argocd/clusters/kubeconfigs/${module.eks.cluster_id}"
+}
+
+resource "aws_secretsmanager_secret_version" "kubeconfig" {
+  lifecycle { ignore_changes = [ secret_string ] }
+  secret_id     = aws_secretsmanager_secret.kubeconfig.id
+  secret_string = module.eks_kubeconfig.kubeconfig
 }

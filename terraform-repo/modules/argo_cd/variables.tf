@@ -1,6 +1,18 @@
+variable "stack_name" {
+  default     = "argocd-demo"
+  type        = string
+  description = "The name of environment"
+}
+
 variable "env_name" {
   type        = string
   description = "The name of environment"
+}
+
+variable "aws_region" {
+  type        = string
+  description = "The AWS Region to deploy resources"
+  default     = "us-west-2"
 }
 
 variable "argocd_version" {
