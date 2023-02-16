@@ -10,25 +10,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   description: Development cluster workloads
   destinations:
-    - namespace: '*'
-      server: '*'
+  - namespace: '*'
+    server: '*'
   namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   sourceRepos:
-    - '*'
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-    allowEmpty: false
-  syncOptions:
-    - "PruneLast=true"
-    - "ApplyOutOfSyncOnly=true"
+  - '*'
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -41,25 +33,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   description: Management cluster workloads/Argo resources
   destinations:
-    - namespace: '*'
-      server: '*'
+  - namespace: '*'
+    server: '*'
   namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   sourceRepos:
-    - '*'
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-    allowEmpty: false
-  syncOptions:
-    - "PruneLast=true"
-    - "ApplyOutOfSyncOnly=true"
+  - '*'
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -72,25 +56,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   description: Production cluster workloads
   destinations:
-    - namespace: '*'
-      server: '*'
+  - namespace: '*'
+    server: '*'
   namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   sourceRepos:
-    - '*'
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-    allowEmpty: false
-  syncOptions:
-    - "PruneLast=true"
-    - "ApplyOutOfSyncOnly=true"
+  - '*'
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -103,25 +79,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   description: Staging cluster workloads
   destinations:
-    - namespace: '*'
-      server: '*'
+  - namespace: '*'
+    server: '*'
   namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   sourceRepos:
-    - '*'
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-    allowEmpty: false
-  syncOptions:
-    - "PruneLast=true"
-    - "ApplyOutOfSyncOnly=true"
+  - '*'
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -134,25 +102,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   description: Test cluster workloads
   destinations:
-    - namespace: '*'
-      server: '*'
+  - namespace: '*'
+    server: '*'
   namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   sourceRepos:
-    - '*'
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-    allowEmpty: false
-  syncOptions:
-    - "PruneLast=true"
-    - "ApplyOutOfSyncOnly=true"
+  - '*'
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -165,14 +125,14 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   description: Test cluster workloads
   destinations:
-    - namespace: '*'
-      server: '*'
+  - namespace: '*'
+    server: '*'
   namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+  - group: '*'
+    kind: '*'
   sourceRepos:
-    - '*'
+  - '*'
