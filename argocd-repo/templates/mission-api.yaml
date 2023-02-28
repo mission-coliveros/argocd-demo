@@ -4,6 +4,7 @@ metadata:
   namespace: "argocd"
   labels:
     app: api
+    ephemeral: "true"
 spec:
   project: "mission-dev"
   source:
